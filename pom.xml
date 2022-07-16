@@ -12,10 +12,7 @@
       <!-- This property will be set by the Maven Dependency plugin -->
       <annotatedJdk>${org.checkerframework:jdk8:jar}</annotatedJdk>
   </properties>
-	  <modules>
-    <module>server</module>
-    <module>webapp</module>
-  </modules>
+	  
 
   <dependencies>
     <dependency>
