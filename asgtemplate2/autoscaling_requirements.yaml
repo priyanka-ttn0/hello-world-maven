@@ -1,0 +1,56 @@
+ami_id: ami-0c55b159cbfafe1f0
+instance_type: t2.micro
+key_name: my-key-pair
+launchtemplatename: MyLaunchTemplate
+roleArn: xxxxxxxx
+DisableApiTermination: true
+user_data: |
+            {
+                "Fn::Base64": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "#!/bin/bash\n",
+                            "touch /home/ec2-user/index.txt\n",
+                           
+                            "yum install -y aws-cfn-bootstrap\n",
+                            "aws s3 cp s3://testing-cron-job/",
+                            {
+                              "Ref": "AppVersion"
+                            },
+                          "/SampleWebApp.war /usr/share/tomcat/apache-tomcat-9.0.63/webapps/\n",
+                          "/usr/share/tomcat/apache-tomcat-9.0.63/bin/startup.sh\n",
+                          "cat <<EOF >>/etc/httpd/conf/httpd.conf",
+                          "<VirtualHost *:80>",
+                          "ProxyRequests on",
+                          "ProxyPreserveHost On",
+                          "ProxyPass /webapp http://0.0.0.0:8080/SampleWebApp/",
+                          "ProxyPassReverse /webapp http://0.0.0.0:8080/SampleWebApp/",
+                          "</VirtualHost>",
+                          "EOF\n",
+                          "systemctl enable httpd\n",
+                          "systemctl start httpd\n",
+                          "systemctl restart httpd"
+                        ]
+                    ]
+                }
+            }
+
+availability_zones:
+  - us-east-1a
+  - us-east-1b
+min_size: 2
+max_size: 5
+desired_capacity: 2
+
+
+load_balancer:
+  enabled: true
+  port: 80
+  instance_port: 80
+  protocol: http
+  health_check_target: "HTTP:80/index.html"
+  healthy_threshold: 3
+  unhealthy_threshold: 5
+  health_check_interval: 30
+  health_check_timeout: 5
