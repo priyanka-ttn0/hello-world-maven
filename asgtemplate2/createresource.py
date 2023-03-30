@@ -33,7 +33,7 @@ if requirements.get('load_balancer', {}).get('enabled', False):
     template['Resources']['MyLaunchTemplate']['Properties']['LoadBalancerNames'] = [{"Ref": "ElasticLoadBalancer"}]
 
 # Save CloudFormation template as JSON file
-with open('autoscaling_template.json', 'w') as f:
+with open('asgtemplate2/autoscaling_template.json', 'w') as f:
     json.dump(template, f)
 
 # Output success message
