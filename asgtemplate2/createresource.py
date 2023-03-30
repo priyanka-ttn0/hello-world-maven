@@ -4,7 +4,7 @@ from myresources import autoscalinggroup, loadbalancer,parameter
 import sys
 
 # Load requirements from YAML file
-with open('autoscaling_requirements.yaml', 'r') as f:
+with open('asgtemplate2/autoscaling_requirements.yaml', 'r') as f:
     requirements = yaml.safe_load(f)
     print(requirements)
 # Define CloudFormation template structure
